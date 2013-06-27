@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.join File.dirname(__FILE__), '..', 'lib'
+
+require 'thor'
+require 'laserbeak'
+
+module Laserbeak
+  class Runner < Thor
+    desc "Tail a physical file for parsing", "starts tailing a file"
+    option :file, :required => true
+    option :parser, :default => "simple"
+    def tail
+      parser = options[:parser].to_sym
+      Laserbeak::Observer.create(parser, options).observe
+    end
+  end
+end
+
+Laserbeak::Runner.start(ARGV)
